@@ -1,0 +1,46 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+
+    dependencies {
+        classpath 'io.swagger:swagger-codegen-cli:2.2.2-SNAPSHOT'
+        //classpath 'io.swagger:swagger-codegen-cli:2.2.1'
+        classpath "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:2.4.0"
+    }
+}
+
+plugins {
+    id "org.hidetake.swagger.generator" version "2.4.0"
+}
+group 'com.mauc66'
+version '1.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+    mavenLocal()
+    mavenCentral()
+}
+
+
+
+validateSwagger {
+    inputFile = file('src/swagger.yaml ')
+}
+
+generateSwaggerCode {
+    language = 'aspnetcore'
+    inputFile = file('src/swagger.yaml')
+    configFile = file('src/config.json')
+    outputDir = file("${project.buildDir.path}/generatedcode")
+
+    //Generate only models
+    components = ['models']
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
